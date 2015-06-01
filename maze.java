@@ -9,7 +9,7 @@ public class maze {
 	int row, col;	
 	char[][] maze;
 
-	public void readInputMaze(File file) {
+	private void readInputMaze(File file) {
 		try {
 			FileReader fr = new FileReader(file);
 			char[] c = new char[(int) file.length()];
@@ -33,6 +33,16 @@ public class maze {
 		
 	}
 
+	public void printMaze() {
+		
+		for(int i = 0; i < this.row; i++) {
+			for(int j = 0; j < this.col; j++) {
+				System.out.print(maze[i][j]);
+			}
+		}
+
+	}
+
 	public void setMazeSizeFromFile(File file) {
 		try {
 			int rowCount = 0;
@@ -50,17 +60,11 @@ public class maze {
 
 			this.maze = new char[row][col];
 
+			readInputMaze(file);
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-	}
-
-	public int getMazeCol() {
-		return this.col;
-	}
-
-	public int getMazeRow() {
-		return this.row;
 	}
 
 	public static void main(String[] args) {
@@ -71,10 +75,11 @@ public class maze {
 		myMaze.setMazeSizeFromFile(f);
 
 		System.out.println("Maze character count: " + f.length());
-		System.out.println("Maze col: " + myMaze.getMazeCol());
-		System.out.println("Maze row: " + myMaze.getMazeRow());
+		System.out.println("Maze col: " + myMaze.col);
+		System.out.println("Maze row: " + myMaze.row);
 
 		myMaze.readInputMaze(f);
+		myMaze.printMaze();
 
 	}
 
