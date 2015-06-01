@@ -15,15 +15,15 @@ public class maze {
 			char[] c = new char[(int) file.length()];
 			fr.read(c);
 			int i = 0;
-				for(int n = 0; n < this.row; n++) {
-					for(int m = 0; m < this.col; m++) {
-						if(c[0] != '\n') {
-							System.out.print(c[i]);
-							this.maze[n][m] = (char) c[i];
-							i++;
-						}
+
+			for(int n = 0; n < this.row; n++) {
+				for(int m = 0; m < this.col; m++) {
+					if(c[0] != '\n') {
+						this.maze[n][m] = c[i];
+						i++;
 					}
-				}	
+				}
+			}	
 
 
 		} catch (Exception e) {
