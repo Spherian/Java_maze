@@ -3,12 +3,13 @@
 //git pull
 
 import java.io.*;
+import point2d.*;
 
 public class maze {
 
 	int row, col;	
 	char[][] maze;
-	int[] S, F;
+	point2d S, F;
 
 	public maze(File file) {
 
@@ -28,11 +29,11 @@ public class maze {
 
 	}
 
-	public boolean isOpen(int[] pos) {
+	public boolean isOpen(point2d pos) {
 
 		boolean decision;
 
-		if(maze[pos[0]][pos[1]] == 'X') {
+		if(maze[pos.getY()][pos.getX()] == 'X') {
 			decision = false;
 		}
 		else {
@@ -43,19 +44,23 @@ public class maze {
 
 	} 
 
-	private int[] findChar(char c) {
+	private point2d findChar(char c) {
 
-		int[] pos = new int [2];
+		int x = 0;
+		int y = 0;
 
 		for(int i = 0; i < this.row; i++) {
 			for(int j = 0; j < this.col; j++) {
 				if(maze[i][j] == c) {
-					pos[0] = i;
-					pos[1] = j;
+					x = i;
+					y = j;
 					break;
 				}
 			}
 		}
+
+		point2d pos = new point2d(x,y);
+
 		return pos;
 	}
 
@@ -101,16 +106,14 @@ public class maze {
 		System.out.println("Maze character count: " + f.length());
 		System.out.println("Maze col: " + myMaze.col);
 		System.out.println("Maze row: " + myMaze.row);
-		System.out.println("S pos: (" + myMaze.S[0] + "," + myMaze.S[1] + ")");
-		System.out.println("F pos: (" + myMaze.F[0] + "," + myMaze.F[1] + ")");
+		System.out.println("S pos: " + myMaze.S.toString());
+		System.out.println("F pos: " + myMaze.F.toString());
 
-		int[] posTest1 = new int[2];
-		posTest1 = new int[]{0,0};
-		int[] posTest2 = new int[2];
-		posTest2 = new int[]{1,2};
+		point2d posTest1 = new point2d(0,0);
+		point2d posTest2 = new point2d(1,2);
 
-		System.out.println("Is (" + posTest1[0] + "," + posTest1[1] + ") open? " + myMaze.isOpen(posTest1));
-		System.out.println("Is (" + posTest2[0] + "," + posTest2[1] + ") open? " + myMaze.isOpen(posTest2));
+		System.out.println("Is " + posTest1.toString() + " open? " + myMaze.isOpen(posTest1));
+		System.out.println("Is " + posTest2.toString() + " open? " + myMaze.isOpen(posTest2));
 
 		myMaze.printMaze();
 
