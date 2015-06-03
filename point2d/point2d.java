@@ -22,6 +22,14 @@ public class point2d {
 		return this.y;
 	}
 
+	public boolean compare(point2d testPos) {
+		boolean decision = false;
+		if(testPos.getX() == this.x && testPos.getY() == this.y) {
+			decision = true;
+		}
+		return decision;
+	}
+
 	public static void main(String[] args) {
 		point2d pt1 = new point2d(4,5);
 		String pt1Str = pt1.toString();
