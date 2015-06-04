@@ -46,7 +46,7 @@ public class maze {
 
 		boolean decision;
 
-		if(pos.getX() > this.col-1 || pos.getY() > this.row-1 || pos.getX() < 0 || pos.getY() < 0) {
+		if(pos.getY() > this.col-1 || pos.getX() > this.row-1 || pos.getY() < 0 || pos.getX() < 0) {
 			decision = false;
 			return decision;
 		}
@@ -61,52 +61,6 @@ public class maze {
 
 	}
 
-//
-	public boolean canFinish(point2d pos) {
-	
-		if(history[pos.getX()][pos.getY()] == '*') {
-			return false;
-		}
-
-		if(pos.compare(F)) {
-			return true;
-		}
-
-		this.history[pos.getX()][pos.getY()] = '*';
-
-		point2d n = new point2d(pos.getX()-1, pos.getY());
-		point2d s = new point2d(pos.getX()+1, pos.getY());
-		point2d e = new point2d(pos.getX(), pos.getY()+1);
-		point2d w = new point2d(pos.getX(), pos.getY()-1);
-
-		System.out.println("("+pos.getX() +","+ pos.getY() +")" + " [" + isOpen(n) + " , " + isOpen(s) + ", " + isOpen(e) + ", " + isOpen(w) + "]"); 
-
-		if(isOpen(n) && canFinish(n)){
-			return true;
-		}
-		if(isOpen(s) && canFinish(s)) {
-			return true;
-		}
-		if(isOpen(e) && canFinish(e)) {
-			return true;
-		}
-		if(isOpen(w) && canFinish(w)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public boolean haveBeenHere(point2d pos) {
-		boolean decision = false;
-		
-		if(history[pos.getX()][pos.getY()] == 'X') {
-			decision = true;
-		}
-
-		return decision;
-	}
-
 	//Check if there's only one S and one F
 	public boolean isMazeValid() {
 
@@ -119,8 +73,41 @@ public class maze {
 			decision = false;
 		}
 
-		if(canFinish(S)) {
-			decision = true;
+		history[S.getX()][S.getY()] = '*';
+		int count = 0;
+		boolean finished = false;
+		while(history[F.getX()][F.getY()] != '*') {
+			System.out.println("COUNT: " + count);
+
+			for(int i = 0; i < row; i++) {
+				for(int j = 0; j < col; j++) {
+					if(history[i][j] == '*') {
+						point2d n = new point2d(i-1, j);
+						point2d s = new point2d(i+1, j);
+						point2d e = new point2d(i, j+1);
+						point2d w = new point2d(i, j-1);
+
+						if(isOpen(n) && history[n.getX()][n.getY()] != '*') {
+							history[n.getX()][n.getY()] = '*';
+						}						
+						else if(isOpen(s) && history[s.getX()][s.getY()] != '*') {
+							history[s.getX()][s.getY()] = '*';
+						}
+						else if(isOpen(e) && history[e.getX()][e.getY()] != '*') {
+							history[e.getX()][e.getY()] = '*';
+						}
+ 						else if(isOpen(w) && history[w.getX()][w.getY()] != '*') {
+							history[w.getX()][w.getY()] = '*';
+						}
+						else {
+							finished = true;
+						}
+					}
+				}
+			}
+
+			count++;
+			printHistory();
 		}
 
 		return decision;
@@ -213,11 +200,15 @@ public class maze {
 
 		System.out.println("Is maze valid? " + myMaze.isMazeValid());
 
-		point2d posTest1 = new point2d(6,7);
+		point2d posTest1 = new point2d(3,7);
 
 		System.out.println("Is " + posTest1.toString() + " open? " + myMaze.isOpen(posTest1));
 
-		myMaze.printHistory();
+		point2d posTest2 = new point2d(5,7);
+
+		System.out.println("Is " + posTest2.toString() + " open? " + myMaze.isOpen(posTest2));
+
+//		myMaze.printHistory();
 
 	}
 
