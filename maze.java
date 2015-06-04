@@ -75,7 +75,6 @@ public class maze {
 
 		history[S.getX()][S.getY()] = '*';
 		int count = 0;
-		boolean finished = false;
 		while(history[F.getX()][F.getY()] != '*') {
 			System.out.println("COUNT: " + count);
 
@@ -99,9 +98,7 @@ public class maze {
  						else if(isOpen(w) && history[w.getX()][w.getY()] != '*') {
 							history[w.getX()][w.getY()] = '*';
 						}
-						else {
-							finished = true;
-						}
+
 					}
 				}
 			}
