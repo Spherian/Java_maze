@@ -71,6 +71,7 @@ public class maze {
 		}
 		else {
 			decision = false;
+			return decision;
 		}
 
 		history[S.getX()][S.getY()] = '*';
@@ -126,6 +127,10 @@ public class maze {
 					}
 				}
 			}
+		}
+
+		if(charCount == 0) {
+			decision = false;
 		}
 
 		return decision;
