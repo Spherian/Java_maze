@@ -1,3 +1,4 @@
+package Grid;
 import java.util.ArrayList;
 
 public class Grid<T> {
@@ -44,7 +45,10 @@ public class Grid<T> {
 
 	public void printGrid() {
 		for(int i=0; i<this.row; i++) {
-			System.out.println(this.grid.get(i));
+			for(int j=0; j<this.col; j++) {
+				T tmp = this.grid.get(i).get(j);
+				System.out.print(tmp);
+			}
 		}
 	}
 	
