@@ -1,24 +1,33 @@
+<<<<<<< HEAD
 package Grid;
+=======
+package grid;
+
+>>>>>>> 8d907afa3aa85c933524298db21e337a7ced33b3
 import java.util.ArrayList;
+import point2d.*;
 
 public class Grid<T> {
 
 	ArrayList<ArrayList<T>> grid;
 	int row;
 	int col;
-	T nullElement;
 
-	public Grid(int inputRow, int inputCol, T inputNullElement) {
+	public Grid(int inputRow, int inputCol) {
 		this.row = inputRow;
 		this.col = inputCol;
-		this.nullElement = inputNullElement;
 		this.grid = new ArrayList<ArrayList<T>>();
 		for(int i=0; i<this.row; i++) {
 			grid.add(new ArrayList<T>());
 			for(int j=0; j<this.col; j++) {
-				this.grid.get(i).add(this.nullElement);
+				this.grid.get(i).add(null);
 			}
 		}
+	}
+
+	public Grid(int inputRow, int inputCol, T defaultValue) {
+		this(inputRow, inputCol);
+		setAll(defaultValue);
 	}
 
 	public int getRow() {
@@ -29,8 +38,38 @@ public class Grid<T> {
 		return this.col;
 	}
 
-	public void setGridElement(int inputRow, int inputCol, T data) {
+	public void setGridElement(point2d pos, T data) {
+		setGridElement(pos.getY(), pos.getX(), data);
+	}
+
+	public void setGridElement(int inputRow, int inputCol, T data){
 		this.grid.get(inputRow).set(inputCol, data);
+	}
+
+	public void setAll(T data){
+		for(int i=0; i<this.row; i++) {
+			for(int j=0; j<this.col; j++) {
+				setGridElement(i, j, data);
+			}
+		}
+	}
+
+	public void setNulls(T data){
+		for(int i=0; i<this.row; i++) {
+			for(int j=0; j<this.col; j++) {
+				if (getGridElement(i, j) == null){
+					setGridElement(i, j, data);
+				}
+			}
+		}
+	}
+
+	public T getGridElement(point2d pos){
+		return getGridElement(pos.getY(), pos.getX());
+	}
+
+	public T getGridElement(int inputRow, int inputCol){
+		return this.grid.get(inputRow).get(inputCol);
 	}
 
 	public void printRow(int inputRow) {
@@ -53,20 +92,21 @@ public class Grid<T> {
 	}
 	
 	public static void main(String[] args) {
-		Grid<Integer> test = new Grid<Integer>(3,5, new Integer("0"));
+		System.out.println("YOYOYO");
+		Grid<Integer> test = new Grid<Integer>(3,5, 0);
 		System.out.println("Row: " + test.getRow());
 		System.out.println("Col: " + test.getCol());
 
-		test.setGridElement(0,1, new Integer("1"));
-		test.setGridElement(0,2, new Integer("2"));
-		test.setGridElement(0,3, new Integer("3"));
-		test.setGridElement(0,4, new Integer("4"));
+		test.setGridElement(0,1, 1);
+		test.setGridElement(0,2, 2);
+		test.setGridElement(0,3, 3);
+		test.setGridElement(0,4, 4);
 
-		test.setGridElement(1,0, new Integer("5"));
-		test.setGridElement(1,1, new Integer("6"));
-		test.setGridElement(1,2, new Integer("7"));
-		test.setGridElement(1,3, new Integer("8"));
-		test.setGridElement(1,4, new Integer("9"));
+		test.setGridElement(1,0, 5);
+		test.setGridElement(1,1, 6);
+		test.setGridElement(1,2, 7);
+		test.setGridElement(1,3, 8);
+		test.setGridElement(1,4, 9);
 
 		test.printRow(1);
 		test.printCol(1);
