@@ -1,15 +1,12 @@
-//git commit -m "msg"
-//git push origin master
-//git pull
-
 import java.io.*;
 import point2d.*;
+import Grid.*;
 
 public class maze {
 
 	int row, col;	
-	char[][] maze, history;
 	point2d S, F;
+	Grid<Character> mazeGrid, historyGrid;
 
 	//Constructor
 	public maze(File file) {
@@ -17,27 +14,6 @@ public class maze {
 		setMazeFromFile(file);
 		this.S = findChar('S');
 		this.F = findChar('F');
-
-	}
-
-	//Display maze on command prompt
-	public void printMaze() {
-		
-		for(int i = 0; i < this.row; i++) {
-			for(int j = 0; j < this.col; j++) {
-				System.out.print(maze[i][j]);
-			}
-		}
-
-	}
-
-	public void printHistory() {
-		
-		for(int i = 0; i < this.row; i++) {
-			for(int j = 0; j < this.col; j++) {
-				System.out.print(history[i][j]);
-			}
-		}
 
 	}
 
@@ -51,7 +27,7 @@ public class maze {
 			return decision;
 		}
 
-		if(maze[pos.getX()][pos.getY()] == 'X') {
+		if(mazeGrid.getGridElement(pos) == 'X') {
 			decision = false;
 		}
 		else {
@@ -61,7 +37,7 @@ public class maze {
 
 	}
 
-	//Check if there's only one S and one F
+	//Check if there's only one S and one F and if the maze is solveable
 	public boolean isMazeValid() {
 
 		boolean decision;
@@ -74,38 +50,36 @@ public class maze {
 			return decision;
 		}
 
-		history[S.getX()][S.getY()] = '*';
+		this.historyGrid.setGridElement(S, '*');
 		int count = 0;
-		while(history[F.getX()][F.getY()] != '*') {
-			System.out.println("COUNT: " + count);
-
-			for(int i = 0; i < row; i++) {
-				for(int j = 0; j < col; j++) {
-					if(history[i][j] == '*') {
+		System.out.println("S: (" + S.getX() + "," + S.getY() + ")");
+		System.out.println("HistoryGrid(S): " + this.historyGrid.getGridElement(S));
+		while(historyGrid.getGridElement(F) != '*') {
+			for(int i=0; i<row; i++) {
+				for(int j=0; j<col; j++) {
+					if(historyGrid.getGridElement(i,j) == '*') {
 						point2d n = new point2d(i-1, j);
 						point2d s = new point2d(i+1, j);
 						point2d e = new point2d(i, j+1);
 						point2d w = new point2d(i, j-1);
 
-						if(isOpen(n) && history[n.getX()][n.getY()] != '*') {
-							history[n.getX()][n.getY()] = '*';
+						if(isOpen(n) && historyGrid.getGridElement(n) != '*') {
+							historyGrid.setGridElement(n, '*');
 						}						
-						else if(isOpen(s) && history[s.getX()][s.getY()] != '*') {
-							history[s.getX()][s.getY()] = '*';
+						else if(isOpen(s) && historyGrid.getGridElement(s) != '*') {
+							historyGrid.setGridElement(s, '*');
 						}
-						else if(isOpen(e) && history[e.getX()][e.getY()] != '*') {
-							history[e.getX()][e.getY()] = '*';
+						else if(isOpen(e) && historyGrid.getGridElement(e) != '*') {
+							historyGrid.setGridElement(e, '*');
 						}
- 						else if(isOpen(w) && history[w.getX()][w.getY()] != '*') {
-							history[w.getX()][w.getY()] = '*';
+ 						else if(isOpen(w) && historyGrid.getGridElement(w) != '*') {
+							historyGrid.setGridElement(w, '*');
 						}
 
 					}
 				}
 			}
-
 			count++;
-			printHistory();
 		}
 
 		return decision;
@@ -119,7 +93,7 @@ public class maze {
 
 		for(int i = 0; i < this.row; i++) {
 			for(int j = 0; j < this.col; j++) {
-				if(this.maze[i][j] == c) {
+				if(this.mazeGrid.getGridElement(i,j) == c) {
 					charCount++;
 					if(charCount > 1) {
 						decision = false;
@@ -145,7 +119,7 @@ public class maze {
 
 		for(int i = 0; i < this.row; i++) {
 			for(int j = 0; j < this.col; j++) {
-				if(this.maze[i][j] == c) {
+				if(this.mazeGrid.getGridElement(i,j) == c) {
 					x = i;
 					y = j;
 					break;
@@ -174,10 +148,25 @@ public class maze {
 			this.row = rowCount;
 			this.col = (int)file.length()/rowCount;
 
+			int itr = 0;
+			this.mazeGrid = new Grid<Character>(this.row, this.col, ' ');
+			for(int i=0; i<this.row; i++) {
+				for(int j=0; j<this.col; j++) {
+					if(c[0] != '\n') {
+						mazeGrid.setGridElement(i, j, c[itr]);
+						itr++;
+					}
+				}
+			}
+			this.historyGrid = mazeGrid;
+			mazeGrid.printGrid();
+			System.out.println("Row: " + mazeGrid.getRow() + " Col: " + mazeGrid.getCol());
+			historyGrid.printGrid();
+/*
 			this.maze = new char[row][col];
 			this.history = new char[row][col];
 
-			int itr = 0;
+			itr = 0;
 			for(int n = 0; n < this.row; n++) {
 				for(int m = 0; m < this.col; m++) {
 					if(c[0] != '\n') {
@@ -187,7 +176,7 @@ public class maze {
 					}
 				}
 			}
-
+*/
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
