@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 package Grid;
-=======
-package grid;
 
->>>>>>> 8d907afa3aa85c933524298db21e337a7ced33b3
 import java.util.ArrayList;
 import point2d.*;
 
@@ -39,7 +35,7 @@ public class Grid<T> {
 	}
 
 	public void setGridElement(point2d pos, T data) {
-		setGridElement(pos.getY(), pos.getX(), data);
+		setGridElement(pos.getX(), pos.getY(), data);
 	}
 
 	public void setGridElement(int inputRow, int inputCol, T data){
@@ -65,7 +61,7 @@ public class Grid<T> {
 	}
 
 	public T getGridElement(point2d pos){
-		return getGridElement(pos.getY(), pos.getX());
+		return getGridElement(pos.getX(), pos.getY());
 	}
 
 	public T getGridElement(int inputRow, int inputCol){
