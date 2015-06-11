@@ -162,21 +162,7 @@ public class maze {
 			mazeGrid.printGrid();
 			System.out.println("Row: " + mazeGrid.getRow() + " Col: " + mazeGrid.getCol());
 			historyGrid.printGrid();
-/*
-			this.maze = new char[row][col];
-			this.history = new char[row][col];
 
-			itr = 0;
-			for(int n = 0; n < this.row; n++) {
-				for(int m = 0; m < this.col; m++) {
-					if(c[0] != '\n') {
-						this.maze[n][m] = c[itr];
-						this.history[n][m] = c[itr];
-						itr++;
-					}
-				}
-			}
-*/
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -198,8 +184,6 @@ public class maze {
 		point2d posTest2 = new point2d(5,7);
 
 		System.out.println("Is " + posTest2.toString() + " open? " + myMaze.isOpen(posTest2));
-
-//		myMaze.printHistory();
 
 	}
 
