@@ -1,10 +1,11 @@
 import java.io.*;
 import point2d.*;
 import Grid.*;
+import java.util.ArrayList;
 
 public class maze {
 
-	int row, col;	
+	int row, col, stepsToSolve;	
 	point2d S, F;
 	Grid<Character> mazeGrid, historyGrid;
 
@@ -52,7 +53,12 @@ public class maze {
 
 		this.historyGrid.setGridElement(S, '*');
 		int count = 0;
-		Grid<Character> oldGridMaze = new Grid<Character>(this.row, this.col, ' ');
+		Grid<Character> oldGridMaze = new Grid<Character>(this.row, this.col, null);
+		
+		Grid<Integer> step = new Grid<Integer>(this.row, this.col, null);
+		int stepper = 0;
+		step.setGridElement(S, 0);		
+
 		historyGrid.copy(oldGridMaze);
 		while(historyGrid.getGridElement(F) != '*') {
 			for(int i=0; i<this.row; i++) {
@@ -65,19 +71,36 @@ public class maze {
 
 						if(isOpen(n) && historyGrid.getGridElement(n) != '*') {
 							historyGrid.setGridElement(n, '*');
+							point2d pt = step.getLowElementPos(n);
+							Integer value = step.getGridElement(pt);
+							value = value+1;
+							step.setGridElement(n,value);
 						}						
 						else if(isOpen(s) && historyGrid.getGridElement(s) != '*') {
 							historyGrid.setGridElement(s, '*');
+							point2d pt = step.getLowElementPos(s);
+							Integer value = step.getGridElement(pt);
+							value = value+1;
+							step.setGridElement(s,value);
 						}
 						else if(isOpen(e) && historyGrid.getGridElement(e) != '*') {
 							historyGrid.setGridElement(e, '*');
+							point2d pt = step.getLowElementPos(e);
+							Integer value = step.getGridElement(pt);
+							value = value+1;
+							step.setGridElement(e,value);
 						}
  						else if(isOpen(w) && historyGrid.getGridElement(w) != '*') {
 							historyGrid.setGridElement(w, '*');
+							point2d pt = step.getLowElementPos(w);
+							Integer value = step.getGridElement(pt);
+							value = value+1;
+							step.setGridElement(w,value);
 						}
 
 					}
 				}
+
 			}
 			count++;
 			//If stuck in a loop, the maze is unsolvable
@@ -87,8 +110,12 @@ public class maze {
 			}
 			historyGrid.copy(oldGridMaze);
 		}
-
+		this.stepsToSolve = step.getGridElement(F);
 		return decision;
+	}
+
+	public int getStepsToSolveMaze() {
+		return this.stepsToSolve;
 	}
 
 	//Check maze for one occurence of a character
@@ -138,6 +165,7 @@ public class maze {
 		return pos;
 	}
 
+
 	//Obtain maze size and populate 2D array of maze
 	private void setMazeFromFile(File file) {
 		try {
@@ -179,14 +207,7 @@ public class maze {
 		maze myMaze = new maze(f);
 
 		System.out.println("Is maze valid? " + myMaze.isMazeValid());
-
-		point2d posTest1 = new point2d(3,7);
-
-		System.out.println("Is " + posTest1.toString() + " open? " + myMaze.isOpen(posTest1));
-
-		point2d posTest2 = new point2d(5,7);
-
-		System.out.println("Is " + posTest2.toString() + " open? " + myMaze.isOpen(posTest2));
+		System.out.println("Number of steps to solve maze: " + myMaze.getStepsToSolveMaze());
 
 	}
 

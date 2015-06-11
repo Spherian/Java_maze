@@ -76,6 +76,14 @@ public class Grid<T> {
 
 	}
 
+	public void copy(Grid<T> grid2) {
+		for(int i=0; i<this.row; i++) {
+			for(int j=0; j<this.col; j++) {
+				grid2.setGridElement(i,j,getGridElement(i,j));
+			}
+		}
+	}
+
 	public T getGridElement(point2d pos){
 		return getGridElement(pos.getX(), pos.getY());
 	}
@@ -100,7 +108,59 @@ public class Grid<T> {
 				T tmp = this.grid.get(i).get(j);
 				System.out.print(tmp);
 			}
+			System.out.println();
 		}
+	}
+
+	public point2d getLowElementPos(point2d pos) {
+		int x = pos.getX();
+		int y = pos.getY();
+		point2d n = new point2d(x-1, y);
+		point2d s = new point2d(x+1, y);
+		point2d e = new point2d(x, y+1);
+		point2d w = new point2d(x, y-1);
+		ArrayList<point2d> elements = new ArrayList<point2d>();
+		T value;
+
+		//Find which  boxes are valid and add to arraylist element)
+		if(inGrid(n) && getGridElement(n) != null) {
+			elements.add(n);
+		}
+		if(inGrid(s) && getGridElement(s) != null) {
+			elements.add(s);
+		}
+		if(inGrid(e) && getGridElement(e) != null) {
+			elements.add(e);
+		}
+		if(inGrid(w) && getGridElement(w) != null) {
+			elements.add(w);
+		}
+
+		int elementIndex = 0;
+		point2d lowPoint2d = elements.get(0);
+		T lowValue = getGridElement(lowPoint2d);
+		for(int i=1; i<elements.size(); i++) {
+			point2d tmpPoint2d = elements.get(i);
+			T tmpValue = getGridElement(tmpPoint2d);
+			if((Integer)lowValue > (Integer)tmpValue) {
+				lowValue = tmpValue;
+				elementIndex = i;
+			}
+		}
+
+		return elements.get(elementIndex);
+		
+	}
+
+	//Is this position actually in the grid?
+	public boolean inGrid(point2d pos) {
+		boolean decision = true;
+
+		if(pos.getY() > this.col-1 || pos.getX() > this.row-1 || pos.getY() < 0 || pos.getX() < 0) {
+			decision = false;
+		}
+
+		return decision;
 	}
 	
 	public static void main(String[] args) {
@@ -123,9 +183,14 @@ public class Grid<T> {
 		test.setGridElement(1,3, 8);
 		test.setGridElement(1,4, 9);
 
-		test.printRow(1);
-		test.printCol(1);
-		test.printGrid();
+		point2d pt = new point2d(2,4);
+		test.getLowElementPos(pt);
+		System.out.println(test.getGridElement(pt));
+		System.out.println("LOWEST:	" + test.getLowElementPos(pt));
+		
+//		test.printRow(1);
+//		test.printCol(1);
+//		test.printGrid();
 	}
 
 }
