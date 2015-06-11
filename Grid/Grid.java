@@ -112,6 +112,7 @@ public class Grid<T> {
 		}
 	}
 
+	//only works for Integers...
 	public point2d getLowElementPos(point2d pos) {
 		int x = pos.getX();
 		int y = pos.getY();
