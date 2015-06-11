@@ -60,6 +60,22 @@ public class Grid<T> {
 		}
 	}
 
+	public boolean compare(Grid<T> grid2) {
+		boolean decision = true;
+
+		for(int i=0; i<this.row; i++) {
+			for(int j=0; j<this.col; j++) {
+				if(getGridElement(i,j) != grid2.getGridElement(i,j)) {
+					decision = false;
+					break;
+				}
+			}
+		}
+
+		return decision;
+
+	}
+
 	public T getGridElement(point2d pos){
 		return getGridElement(pos.getX(), pos.getY());
 	}
@@ -88,8 +104,11 @@ public class Grid<T> {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("YOYOYO");
-		Grid<Integer> test = new Grid<Integer>(3,5, 0);
+		Grid<Integer> test = new Grid<Integer>(3,5,0);
+		System.out.println("Grid equals itself? " + test.compare(test));
+		Grid<Integer> test2 = new Grid<Integer>(3,5,0);
+		System.out.println("Are test and test2 grid the same? " + test.compare(test2));
+
 		System.out.println("Row: " + test.getRow());
 		System.out.println("Col: " + test.getCol());
 
