@@ -52,11 +52,11 @@ public class maze {
 
 		this.historyGrid.setGridElement(S, '*');
 		int count = 0;
-		System.out.println("S: (" + S.getX() + "," + S.getY() + ")");
-		System.out.println("HistoryGrid(S): " + this.historyGrid.getGridElement(S));
+		Grid<Character> oldGridMaze = new Grid<Character>(this.row, this.col, ' ');
+		historyGrid.copy(oldGridMaze);
 		while(historyGrid.getGridElement(F) != '*') {
-			for(int i=0; i<row; i++) {
-				for(int j=0; j<col; j++) {
+			for(int i=0; i<this.row; i++) {
+				for(int j=0; j<this.col; j++) {
 					if(historyGrid.getGridElement(i,j) == '*') {
 						point2d n = new point2d(i-1, j);
 						point2d s = new point2d(i+1, j);
@@ -80,6 +80,12 @@ public class maze {
 				}
 			}
 			count++;
+			//If stuck in a loop, the maze is unsolvable
+			if(historyGrid.compare(oldGridMaze) == true) {
+				decision = false;
+				break;
+			}
+			historyGrid.copy(oldGridMaze);
 		}
 
 		return decision;
@@ -159,9 +165,6 @@ public class maze {
 				}
 			}
 			this.historyGrid = mazeGrid;
-			mazeGrid.printGrid();
-			System.out.println("Row: " + mazeGrid.getRow() + " Col: " + mazeGrid.getCol());
-			historyGrid.printGrid();
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
