@@ -1,0 +1,8 @@
+null	0		null	null	null	null	null	null	35		null	null	null	null	null	null
+null	1		2		3		4		5		6		null	34		33		32		31		30		null	null
+null	null	null	null	5		null	7		null	null	null	null	null	29		null	null
+null	9		8		7		6		null	8		9		null	25		26		27		28		null	null
+null	10		null	null	7		null	null	null	null	24		null	null	null	null	null
+null	11		null	null	null	17		18		19		null	23		24		25		26		null	null
+null	12		13		14		15		16		null	20		21		22		null	null	null	null	null
+null	null	null	null	null	null	null	null	null	null	null	null	null	null	null
