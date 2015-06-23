@@ -30,6 +30,15 @@ public class point2d {
 		return decision;
 	}
 
+	public point2d[] getAdjacentPos() {
+		point2d n = new point2d(this.x-1, this.y);
+		point2d s = new point2d(this.x+1, this.y);
+		point2d e = new point2d(this.x, this.y+1);
+		point2d w = new point2d(this.x, this.y-1);
+		point2d[] arr = {n,s,e,w};
+		return arr;
+	}
+
 	public static void main(String[] args) {
 		point2d pt1 = new point2d(4,5);
 		String pt1Str = pt1.toString();
