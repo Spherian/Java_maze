@@ -19,6 +19,7 @@ public class Grid<T> {
 				this.grid.get(i).add(null);
 			}
 		}
+
 	}
 
 	public Grid(int inputRow, int inputCol, T defaultValue) {
@@ -103,12 +104,47 @@ public class Grid<T> {
 	}
 
 	public void printGrid() {
+		point2d longestPos = getLongestChar();
+		String longestStr = "";		
+		if(getGridElement(longestPos) == null) {
+			longestStr = "    ";
+		}
+		else {
+			longestStr = getGridElement(longestPos).toString();
+		}
+		int numCharsLongestStr =  longestStr.length();
+
 		for(int i=0; i<this.row; i++) {
 			for(int j=0; j<this.col; j++) {
-				T tmp = this.grid.get(i).get(j);
-				System.out.print(tmp);
+				T tmpElement = this.grid.get(i).get(j);
+				int numCharTmpStr = 0;
+				String tmpStr = "";	
+			
+				if(tmpElement == null) {
+					if(j==this.col-1) {
+						System.out.println();
+						break;
+					}
+					tmpStr = "    ";
+					numCharTmpStr = tmpStr.length();
+					int diff = numCharsLongestStr - numCharTmpStr;
+					for(int n=0; n<diff; n++) {
+						tmpStr = tmpStr + " ";
+					}
+
+				}
+				else {
+					tmpStr = tmpElement.toString();
+					numCharTmpStr = tmpStr.length();
+					int diff = numCharsLongestStr - numCharTmpStr;
+
+					for(int n=0; n<diff; n++) {
+						tmpStr = tmpStr + " ";
+					}
+				}
+
+				System.out.print(tmpStr);
 			}
-			System.out.println();
 		}
 	}
 
@@ -163,7 +199,73 @@ public class Grid<T> {
 
 		return decision;
 	}
-	
+
+	public point2d getLongestChar() {
+		point2d longestCharPos = new point2d(0,0);
+		int longestCharSize = 0;
+		for(int i=0; i<this.row; i++) {
+			for(int j=0; j<this.col; j++) {
+				String tmpChar = "";
+				if(getGridElement(i,j) == null) {
+					tmpChar = "    ";
+				}
+				else {
+					tmpChar = getGridElement(i,j).toString();
+				}
+				int tmpCharSize = tmpChar.length();
+				if(tmpCharSize > longestCharSize) {
+					longestCharSize = tmpCharSize;
+					longestCharPos = new point2d(i,j);
+				}
+			}
+		}
+		return longestCharPos;
+	}
+
+	public Element getElement(int pos){
+		int elementRow = pos/this.row;
+		int elementCol = pos%this.row;
+		point2d gridPt = new point2d(elementRow, elementCol);
+		if (!inGrid(gridPt)){
+			return null;
+		}
+
+		return new Element(pos);
+	}
+
+
+	public class Element {
+		private final int pos;
+		private final point2d gridPt;
+
+		public Element(int pos){
+			this.pos = pos;
+			int elementRow = pos/Grid.this.row;
+			int elementCol = pos%Grid.this.row;
+			this.gridPt = new point2d(elementRow, elementCol);
+		}
+
+		public int pos(){
+			return pos;
+		}
+
+		public point2d gridPt() {
+			return gridPt;
+		}
+
+		public Element next(){
+			return getElement(pos + 1);
+		}
+
+		public Element prev(){
+			return getElement(pos - 1);
+		}
+
+		public T value(){
+			return getGridElement(gridPt);
+		}
+	}
+
 	public static void main(String[] args) {
 		Grid<Integer> test = new Grid<Integer>(3,5,0);
 		System.out.println("Grid equals itself? " + test.compare(test));
@@ -173,21 +275,29 @@ public class Grid<T> {
 		System.out.println("Row: " + test.getRow());
 		System.out.println("Col: " + test.getCol());
 
+
 		test.setGridElement(0,1, 1);
-		test.setGridElement(0,2, 2);
+		test.setGridElement(0,2, null);
 		test.setGridElement(0,3, 3);
 		test.setGridElement(0,4, 4);
 
 		test.setGridElement(1,0, 5);
 		test.setGridElement(1,1, 6);
 		test.setGridElement(1,2, 7);
-		test.setGridElement(1,3, 8);
+		test.setGridElement(1,3, 888888888);
 		test.setGridElement(1,4, 9);
 
-		point2d pt = new point2d(2,4);
-		test.getLowElementPos(pt);
-		System.out.println(test.getGridElement(pt));
-		System.out.println("LOWEST:	" + test.getLowElementPos(pt));
+		test.setGridElement(2,1, 99);
+		test.setGridElement(2,4,999999);
+
+		test.printGrid();
+
+		point2d results = test.getLongestChar();
+		System.out.println("LongestChar: " + (String) results.toString());
+		int results2 = 13/14;
+		System.out.println("(int) 17/14: " + results2);
+		int results3 = 13%14;
+		System.out.println("17%14: " + results3);
 		
 //		test.printRow(1);
 //		test.printCol(1);
