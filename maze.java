@@ -1,5 +1,5 @@
 import java.io.*;
-import point2d.*;
+import Point2d.*;
 import Grid.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -7,9 +7,9 @@ import java.util.ListIterator;
 public class maze {
 
 	int row, col, stepsToSolve;	
-	point2d S, F;
-	Grid<Character> mazeGrid, historyGrid;
-	Grid<Integer> step;
+	Point2d S, F;
+	Grid<Character> mazeGrid;
+	Grid<Integer> step, solution;
 
 	//Constructor
 	public maze(File file) {
@@ -20,18 +20,18 @@ public class maze {
 
 	}
 
-	public boolean isIntersection(point2d pos) {
+	public boolean isIntersection(Point2d pos) {
 		boolean decision = false;
 		//Check to see if the given position is even open
 		if(!isOpen(pos)) {
 			return decision;
 		}
 		//If it is open, get all adjacent positions		
-		point2d[] adjPos = pos.getAdjacentPos();
+		Point2d[] adjPos = pos.getAdjacentPos();
 		
 		int wallCounter = 0;
 		for(int i=0; i<adjPos.length;i++) {
-			point2d tmpPos = adjPos[i];
+			Point2d tmpPos = adjPos[i];
 
 			if(!isOpen(tmpPos)) {
 				wallCounter++;
@@ -45,11 +45,11 @@ public class maze {
 		return decision;
 	}
 
-	public ArrayList<point2d> getAllIntersections() {
-		ArrayList<point2d> arr = new ArrayList<point2d>();
+	public ArrayList<Point2d> getAllIntersections() {
+		ArrayList<Point2d> arr = new ArrayList<Point2d>();
 		for(int i=1; i<this.row-1; i++) {
 			for(int j=1; j<this.col-1; j++) {
-				point2d tmpPos = new point2d(i,j);
+				Point2d tmpPos = new Point2d(i,j);
 				if(isIntersection(tmpPos)) {
 					arr.add(tmpPos);
 				}
@@ -60,7 +60,7 @@ public class maze {
 
 
 	//Check if the position is a wall or open
-	public boolean isOpen(point2d pos) {
+	public boolean isOpen(Point2d pos) {
 
 		boolean decision;
 
@@ -81,7 +81,7 @@ public class maze {
 
 	//Check if there's only one S and one F and if the maze is solveable
 	public boolean isMazeValid() {
-
+		Grid<Character> historyGrid = this.mazeGrid;
 		boolean decision;
 
 		if(onlyOneChar('S') && onlyOneChar('F')) {
@@ -92,7 +92,7 @@ public class maze {
 			return decision;
 		}
 
-		this.historyGrid.setGridElement(S, '*');
+		historyGrid.setGridElement(S, '*');
 		int count = 0;
 		Grid<Character> oldGridMaze = new Grid<Character>(this.row, this.col, null);
 		
@@ -105,35 +105,36 @@ public class maze {
 			for(int i=0; i<this.row; i++) {
 				for(int j=0; j<this.col; j++) {
 					if(historyGrid.getGridElement(i,j) == '*') {
-						point2d n = new point2d(i-1, j);
-						point2d s = new point2d(i+1, j);
-						point2d e = new point2d(i, j+1);
-						point2d w = new point2d(i, j-1);
+						
+						Point2d n = new Point2d(i-1, j);
+						Point2d s = new Point2d(i+1, j);
+						Point2d e = new Point2d(i, j+1);
+						Point2d w = new Point2d(i, j-1);
 
 						if(isOpen(n) && historyGrid.getGridElement(n) != '*') {
 							historyGrid.setGridElement(n, '*');
-							point2d pt = step.getLowElementPos(n);
+							Point2d pt = step.getLowElementPos(n);
 							Integer value = step.getGridElement(pt);
 							value = value+1;
 							this.step.setGridElement(n,value);
 						}						
 						else if(isOpen(s) && historyGrid.getGridElement(s) != '*') {
 							historyGrid.setGridElement(s, '*');
-							point2d pt = step.getLowElementPos(s);
+							Point2d pt = step.getLowElementPos(s);
 							Integer value = step.getGridElement(pt);
 							value = value+1;
 							this.step.setGridElement(s,value);
 						}
 						else if(isOpen(e) && historyGrid.getGridElement(e) != '*') {
 							historyGrid.setGridElement(e, '*');
-							point2d pt = step.getLowElementPos(e);
+							Point2d pt = step.getLowElementPos(e);
 							Integer value = step.getGridElement(pt);
 							value = value+1;
 							this.step.setGridElement(e,value);
 						}
  						else if(isOpen(w) && historyGrid.getGridElement(w) != '*') {
 							historyGrid.setGridElement(w, '*');
-							point2d pt = step.getLowElementPos(w);
+							Point2d pt = step.getLowElementPos(w);
 							Integer value = step.getGridElement(pt);
 							value = value+1;
 							this.step.setGridElement(w,value);
@@ -189,7 +190,7 @@ public class maze {
 	}
 
 	//Finds the first occurence of a character in the maze
-	private point2d findChar(char c) {
+	private Point2d findChar(char c) {
 
 		int x = 0;
 		int y = 0;
@@ -204,7 +205,7 @@ public class maze {
 			}
 		}
 
-		point2d pos = new point2d(x,y);
+		Point2d pos = new Point2d(x,y);
 
 		return pos;
 	}
@@ -234,7 +235,6 @@ public class maze {
 					itr++;
 				}
 			}
-			this.historyGrid = mazeGrid;
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -245,15 +245,11 @@ public class maze {
 		this.mazeGrid.printGrid();
 	}
 
-	public void printHistory() {
-		this.historyGrid.printGrid();
-	}
-
 	public void printStep() {
 		this.step.printGrid();
 	}
 
-	private boolean isStepOpen(point2d pos) {
+	private boolean isStepOpen(Point2d pos) {
 		boolean decision;
 
 		if(pos.compare(this.S) || pos.compare(this.F)) {
@@ -275,13 +271,13 @@ public class maze {
 		return decision;
 	}
 
-	public boolean isDeadEnd(point2d pos) {
+	public boolean isDeadEnd(Point2d pos) {
 		boolean decision = false;
 		if(!isStepOpen(pos)) {
 			return decision;
 		}	
 
-		point2d[] adjArr = pos.getAdjacentPos();
+		Point2d[] adjArr = pos.getAdjacentPos();
 
 		int closedCount = 0;
 
@@ -299,12 +295,12 @@ public class maze {
 		return decision;
 	}
 
-	public ArrayList<point2d> getAllDeadEnd() {
+	public ArrayList<Point2d> getAllDeadEnd() {
 
-		ArrayList<point2d> deadEnds = new ArrayList<point2d>();
+		ArrayList<Point2d> deadEnds = new ArrayList<Point2d>();
 		for(int i=0; i<this.row-1; i++) {
 			for(int j=0; j<this.col-1; j++) {
-				point2d tmpPos = new point2d(i,j);
+				Point2d tmpPos = new Point2d(i,j);
 				if(isDeadEnd(tmpPos)) {
 					if(!tmpPos.compare(this.S) || !tmpPos.compare(this.F)) {
 						deadEnds.add(tmpPos);
@@ -318,7 +314,7 @@ public class maze {
 	public void getOptimalSteps() {
 
 		Grid<Integer> oldGrid = this.step;
-		ArrayList<point2d> deadEnds = getAllDeadEnd();
+		ArrayList<Point2d> deadEnds = getAllDeadEnd();
 
 		while(deadEnds.size() > 2) {
 			deadEnds = getAllDeadEnd();
@@ -331,25 +327,28 @@ public class maze {
 	}
 
 	public ArrayList<String> getDirections() {
+		this.solution = new Grid<Integer>(this.row, this.col, null);
 		ArrayList<String> directions = new ArrayList<String>();
-		point2d tmpPos = new point2d(S.getX(), S.getY());
-		point2d[] adjTmpPos = tmpPos.getAdjacentPos();
+		Point2d tmpPos = new Point2d(F.getX(), F.getY());
+		Point2d[] adjTmpPos = tmpPos.getAdjacentPos();
 		int value = 0;
 		for(int i=0; i<adjTmpPos.length; i++) {
 			if(isStepOpen(adjTmpPos[i])) {
 				directions.add(getStrDirection(i));
 				tmpPos = adjTmpPos[i];
 				value = this.step.getGridElement(adjTmpPos[i]);
+				this.solution.setGridElement(adjTmpPos[i], value);
 			}
 		}	
 
 		for(int x=0; x<this.stepsToSolve; x++) {
 			adjTmpPos = tmpPos.getAdjacentPos();
 			for(int i=0; i<adjTmpPos.length; i++) {
-				if(isStepOpen(adjTmpPos[i]) && this.step.getGridElement(adjTmpPos[i]) > value) {
+				if(isStepOpen(adjTmpPos[i]) && this.step.getGridElement(adjTmpPos[i]) < value) {
 					directions.add(getStrDirection(i));
 					tmpPos = adjTmpPos[i];
 					value = this.step.getGridElement(adjTmpPos[i]);
+					this.solution.setGridElement(adjTmpPos[i], value);
 				}
 			}
 			
@@ -359,7 +358,7 @@ public class maze {
 		while(itr.hasNext()) {
 			System.out.println(itr.next() + " to " + itr.nextIndex());
 		}
-
+		this.solution.printGrid();
 		return directions;
 	}
 
@@ -389,9 +388,9 @@ public class maze {
 		System.out.println("Is maze valid? " + myMaze.isMazeValid());
 		System.out.println("Number of steps to solve maze: " + myMaze.getStepsToSolveMaze());
 		
-		myMaze.getAllDeadEnd();
-		myMaze.getOptimalSteps();
-		myMaze.printStep();
+//		myMaze.getAllDeadEnd();
+//		myMaze.getOptimalSteps();
+//		myMaze.printStep();
 		myMaze.getDirections();
 	}
 
