@@ -29,17 +29,7 @@ public class Point2d {
 		}
 		return decision;
 	}
-/*
 
-	public Point2d[] getAdjacentPos() {
-		Point2d n = new Point2d(this.x-1, this.y);
-		Point2d s = new Point2d(this.x+1, this.y);
-		Point2d e = new Point2d(this.x, this.y+1);
-		Point2d w = new Point2d(this.x, this.y-1);
-		Point2d[] arr = {n,s,e,w};
-		return arr;
-	}
-*/
 	public class Adjacent {
 		Point2d n,s,e,w;
 		public Point2d getN() {
