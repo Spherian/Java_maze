@@ -59,9 +59,6 @@ public class Point2d {
 
 		Adjacent adj = pt1.new Adjacent();
 		Point2d[] adjPos = adj.getAdjacent();
-		System.out.println("INBOUND JARGON!");
-		System.out.println(adjPos);
-		System.out.println("Not jargon:");
 		for(int i=0; i<adjPos.length; i++) {
 			System.out.println(i + ": " + adjPos[i]);
 		}
