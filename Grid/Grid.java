@@ -1,7 +1,7 @@
 package Grid;
 
 import java.util.ArrayList;
-import point2d.*;
+import Point2d.*;
 
 public class Grid<T> {
 
@@ -35,7 +35,7 @@ public class Grid<T> {
 		return this.col;
 	}
 
-	public void setGridElement(point2d pos, T data) {
+	public void setGridElement(Point2d pos, T data) {
 		setGridElement(pos.getX(), pos.getY(), data);
 	}
 
@@ -85,7 +85,7 @@ public class Grid<T> {
 		}
 	}
 
-	public T getGridElement(point2d pos){
+	public T getGridElement(Point2d pos){
 		return getGridElement(pos.getX(), pos.getY());
 	}
 
@@ -104,7 +104,7 @@ public class Grid<T> {
 	}
 
 	public void printGrid() {
-		point2d longestPos = getLongestChar();
+		Point2d longestPos = getLongestChar();
 		String longestStr = "";		
 		if(getGridElement(longestPos) == null) {
 			longestStr = "    ";
@@ -149,14 +149,14 @@ public class Grid<T> {
 	}
 
 	//only works for Integers...
-	public point2d getLowElementPos(point2d pos) {
+	public Point2d getLowElementPos(Point2d pos) {
 		int x = pos.getX();
 		int y = pos.getY();
-		point2d n = new point2d(x-1, y);
-		point2d s = new point2d(x+1, y);
-		point2d e = new point2d(x, y+1);
-		point2d w = new point2d(x, y-1);
-		ArrayList<point2d> elements = new ArrayList<point2d>();
+		Point2d n = new Point2d(x-1, y);
+		Point2d s = new Point2d(x+1, y);
+		Point2d e = new Point2d(x, y+1);
+		Point2d w = new Point2d(x, y-1);
+		ArrayList<Point2d> elements = new ArrayList<Point2d>();
 		T value;
 
 		//Find which  boxes are valid and add to arraylist element)
@@ -174,10 +174,10 @@ public class Grid<T> {
 		}
 
 		int elementIndex = 0;
-		point2d lowPoint2d = elements.get(0);
+		Point2d lowPoint2d = elements.get(0);
 		T lowValue = getGridElement(lowPoint2d);
 		for(int i=1; i<elements.size(); i++) {
-			point2d tmpPoint2d = elements.get(i);
+			Point2d tmpPoint2d = elements.get(i);
 			T tmpValue = getGridElement(tmpPoint2d);
 			if((Integer)lowValue > (Integer)tmpValue) {
 				lowValue = tmpValue;
@@ -190,7 +190,7 @@ public class Grid<T> {
 	}
 
 	//Is this position actually in the grid?
-	public boolean inGrid(point2d pos) {
+	public boolean inGrid(Point2d pos) {
 		boolean decision = true;
 
 		if(pos.getY() > this.col-1 || pos.getX() > this.row-1 || pos.getY() < 0 || pos.getX() < 0) {
@@ -200,8 +200,8 @@ public class Grid<T> {
 		return decision;
 	}
 
-	public point2d getLongestChar() {
-		point2d longestCharPos = new point2d(0,0);
+	public Point2d getLongestChar() {
+		Point2d longestCharPos = new Point2d(0,0);
 		int longestCharSize = 0;
 		for(int i=0; i<this.row; i++) {
 			for(int j=0; j<this.col; j++) {
@@ -215,7 +215,7 @@ public class Grid<T> {
 				int tmpCharSize = tmpChar.length();
 				if(tmpCharSize > longestCharSize) {
 					longestCharSize = tmpCharSize;
-					longestCharPos = new point2d(i,j);
+					longestCharPos = new Point2d(i,j);
 				}
 			}
 		}
@@ -225,7 +225,7 @@ public class Grid<T> {
 	public Element getElement(int pos){
 		int elementRow = pos/this.row;
 		int elementCol = pos%this.row;
-		point2d gridPt = new point2d(elementRow, elementCol);
+		Point2d gridPt = new Point2d(elementRow, elementCol);
 		if (!inGrid(gridPt)){
 			return null;
 		}
@@ -236,20 +236,20 @@ public class Grid<T> {
 
 	public class Element {
 		private final int pos;
-		private final point2d gridPt;
+		private final Point2d gridPt;
 
 		public Element(int pos){
 			this.pos = pos;
 			int elementRow = pos/Grid.this.row;
 			int elementCol = pos%Grid.this.row;
-			this.gridPt = new point2d(elementRow, elementCol);
+			this.gridPt = new Point2d(elementRow, elementCol);
 		}
 
 		public int pos(){
 			return pos;
 		}
 
-		public point2d gridPt() {
+		public Point2d gridPt() {
 			return gridPt;
 		}
 
@@ -292,7 +292,7 @@ public class Grid<T> {
 
 		test.printGrid();
 
-		point2d results = test.getLongestChar();
+		Point2d results = test.getLongestChar();
 		System.out.println("LongestChar: " + (String) results.toString());
 		int results2 = 13/14;
 		System.out.println("(int) 17/14: " + results2);
