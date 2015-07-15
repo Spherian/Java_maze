@@ -27,8 +27,10 @@ public class maze {
 			return decision;
 		}
 		//If it is open, get all adjacent positions		
-		Point2d[] adjPos = pos.getAdjacentPos();
-		
+		//Point2d[] adjPos = pos.getAdjacentPos();
+		Point2d.Adjacent adj = pos.new Adjacent();
+		Point2d[] adjPos = adj.getAdjacent();
+
 		int wallCounter = 0;
 		for(int i=0; i<adjPos.length;i++) {
 			Point2d tmpPos = adjPos[i];
@@ -277,7 +279,9 @@ public class maze {
 			return decision;
 		}	
 
-		Point2d[] adjArr = pos.getAdjacentPos();
+//		Point2d[] adjArr = pos.getAdjacentPos();
+		Point2d.Adjacent adj = pos.new Adjacent();
+		Point2d[] adjArr = adj.getAdjacent();
 
 		int closedCount = 0;
 
@@ -330,7 +334,10 @@ public class maze {
 		this.solution = new Grid<Integer>(this.row, this.col, null);
 		ArrayList<String> directions = new ArrayList<String>();
 		Point2d tmpPos = new Point2d(F.getX(), F.getY());
-		Point2d[] adjTmpPos = tmpPos.getAdjacentPos();
+
+		Point2d.Adjacent adj = tmpPos.new Adjacent();
+		Point2d[] adjTmpPos = adj.getAdjacent();
+
 		int value = 0;
 		for(int i=0; i<adjTmpPos.length; i++) {
 			if(isStepOpen(adjTmpPos[i])) {
@@ -342,11 +349,14 @@ public class maze {
 		}	
 
 		for(int x=0; x<this.stepsToSolve; x++) {
-			adjTmpPos = tmpPos.getAdjacentPos();
+			//adjTmpPos = tmpPos.getAdjacentPos();
+			adj = tmpPos.new Adjacent();
+			adjTmpPos = adj.getAdjacent();
 			for(int i=0; i<adjTmpPos.length; i++) {
 				if(isStepOpen(adjTmpPos[i]) && this.step.getGridElement(adjTmpPos[i]) < value) {
 					directions.add(getStrDirection(i));
 					tmpPos = adjTmpPos[i];
+					System.out.print("HERE");
 					value = this.step.getGridElement(adjTmpPos[i]);
 					this.solution.setGridElement(adjTmpPos[i], value);
 				}
@@ -355,6 +365,7 @@ public class maze {
 		}
 
 		ListIterator itr = directions.listIterator();
+		System.out.println("SIZE: " + directions.size());
 		while(itr.hasNext()) {
 			System.out.println(itr.next() + " to " + itr.nextIndex());
 		}

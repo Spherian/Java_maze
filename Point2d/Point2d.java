@@ -31,6 +31,7 @@ public class Point2d {
 	}
 
 	public class Adjacent {
+
 		Point2d n,s,e,w;
 		public Point2d getN() {
 			return new Point2d(Point2d.this.x-1, Point2d.this.y);
@@ -47,6 +48,11 @@ public class Point2d {
 		public Point2d[] getAdjacent() {
 			Point2d[] arr = {getN(), getS(), getE(), getW()};
 			return arr;
+		}
+		public String toString() {
+			String results;
+			results = "[" + getN().toString() + ", " + getS().toString() + ", " + getE().toString() + getW().toString() + "]";
+			return results;
 		}
 	}
 
