@@ -16,6 +16,7 @@ public class Grid<T> {
 		this.row = inputRow;
 		this.col = inputCol;
 		this.grid = new ArrayList<ArrayList<T>>();
+
 		for(int i=0; i<this.row; i++) {
 			grid.add(new ArrayList<T>());
 			for(int j=0; j<this.col; j++) {
@@ -47,52 +48,47 @@ public class Grid<T> {
 	}
 
 	public void setAll(T data){
-		for(int i=0; i<this.row; i++) {
-			for(int j=0; j<this.col; j++) {
-				setGridElement(i, j, data);
-			}
+		for(Grid<T>.Element tmpElem : this.elements()) {
+				setGridElement(tmpElem.gridPt(), data);
 		}
 	}
 
 	public void setNulls(T data){
-		for(int i=0; i<this.row; i++) {
-			for(int j=0; j<this.col; j++) {
-				if (getGridElement(i, j) == null){
-					setGridElement(i, j, data);
-				}
+		for(Grid<T>.Element tmpElem : this.elements()) {
+			if(tmpElem.value() == null) {
+				setGridElement(tmpElem.gridPt(), data);
 			}
 		}
 	}
 
 	public boolean compare(Grid<T> grid2) {
-		boolean decision = true;
 
 		if(this.row != grid2.row || this.col != grid2.col) {
-			decision = false;
-			return decision;
+			return false;
 		}
-/*
-		for(int i=0; i<this.row; i++) {
-			for(int j=0; j<this.col; j++) {
-				if(getGridElement(i,j) != grid2.getGridElement(i,j)) {
-					decision = false;
-					break;
-				}
-			}
-		}
-*/
+	 
 		for(Grid<T>.Element tmpElem : this.elements()) {
-			System.out.print("Grid1: " + tmpElem.value());
-			for(Grid<T>.Element tmpElem2 : grid2.elements()) {
-				System.out.println(" Grid2: " + tmpElem2.value());
-				if(tmpElem.value() != tmpElem2.value()) {
-					decision = false;
-					break;
+			Grid<T>.Element tmpElem2 = grid2.getElement(tmpElem.pos());
+			
+			T v1 = tmpElem.value();
+			T v2 = tmpElem2.value();
+	 
+			System.out.print("Grid1: " + v1);
+			System.out.println(" Grid2: " + v2);
+	 
+			if (v1 == null || v2 == null){
+				if (v1 != v2){
+					return false;
+				} else {
+					continue;
 				}
 			}
+	 
+			if (!v1.equals(v2)){
+				return false;
+			}
 		}
-
-		return decision;
+		return true;
 
 	}
 
@@ -339,8 +335,13 @@ public class Grid<T> {
 		intGrid3.printGrid();
 		intGrid2.copy(intGrid3);
 		intGrid2.printGrid();
-
 		System.out.println(intGrid3.compare(intGrid3));
+
+		intGrid2.setNulls(101101101);
+		intGrid2.printGrid();
+
+		intGrid2.setAll(77);
+		intGrid2.printGrid();
 
 	}
 
