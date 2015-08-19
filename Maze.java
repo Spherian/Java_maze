@@ -410,6 +410,12 @@ public class Maze {
 	public void moveRobot(Robot r, Point2d pos) {
 		mazeGrid.setGridElement(r.getCurrentPos(), ' ');
 		mazeGrid.setGridElement(pos, r.getSymbol());
+		if(!pos.compare(this.S)) {
+			mazeGrid.setGridElement(this.S, 'S');
+		}
+		if(!pos.compare(this.F)) {
+			mazeGrid.setGridElement(this.F, 'F');
+		}
 	}
 
 	public static void main(String[] args) {
@@ -418,14 +424,17 @@ public class Maze {
 		File f = new File(maze1FileName);
 		
 		Maze myMaze = new Maze(f);
+		myMaze.printMaze();
+
 		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
 		myMaze.addRobot(myRobot);		
 		Point2d newRobotPos = myRobot.getCurrentPos();
 
 		Scanner sc = new Scanner(System.in);
-		String tmpStr = sc.next();
+		String tmpStr = " ";
 
-		while(!tmpStr.equals("p")) {
+		while(!tmpStr.equals("quit")) {
+			System.out.print("Enter command: ");
 			tmpStr = sc.next();
 			if(tmpStr.equals("w")){
 				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()-1, myRobot.getCurrentPos().getY());
@@ -439,7 +448,6 @@ public class Maze {
 			if(tmpStr.equals("d")) {
 				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()+1);
 			}
-			System.out.println(newRobotPos.toString());
 			if(myMaze.isOpen(newRobotPos)) {
 				myMaze.moveRobot(myRobot, newRobotPos);
 				myRobot.setCurrentPos(newRobotPos);
@@ -448,15 +456,15 @@ public class Maze {
 				System.out.println("You cannot go here");
 				newRobotPos = myRobot.getCurrentPos();
 			}
+
 			myMaze.printMaze();
-			System.out.println("Enter command:");
 		}
 
 		sc.close();
 
 //		myMaze.printDirectionsFromF();
 //		myMaze.printStep();
-		myMaze.printMaze();
+//		myMaze.printMaze();
 //		myMaze.printSolution();
 	}
 
