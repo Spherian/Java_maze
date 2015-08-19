@@ -1,10 +1,18 @@
 import java.io.*;
 import Point2d.*;
 import Grid.*;
+import Robot.*;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class Maze {
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+
+public class Maze extends JPanel {
 
 	int row, col, stepsToSolve;	
 	Point2d S, F;
@@ -14,6 +22,10 @@ public class Maze {
 
 	//Constructor
 	public Maze(File file) {
+
+		KeyListener listener = new MyKeyListener();
+		addKeyListener(listener);
+		setFocusable(true);
 
 		setMazeFromFile(file);
 		this.S = findChar('S');
@@ -397,6 +409,37 @@ public class Maze {
 		return results;
 	}
 
+	public void addRobot(Robot r) {
+		
+		mazeGrid.setGridElement(S, r.getSymbol());
+	}
+
+	public class MyKeyListener implements KeyListener {
+
+		public void keyPressed(KeyEvent e) {
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				System.out.println("RIGHT");
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				System.out.println("LEFT");
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_UP) {
+				System.out.println("UP");
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				System.out.println("DOWN");
+			}
+		}
+
+		public void keyReleased(KeyEvent e) {
+
+		}
+
+		public void keyTyped(KeyEvent e) {
+
+		}
+	}
+
 	public static void main(String[] args) {
 
 		String maze1FileName = args[0];
@@ -404,10 +447,20 @@ public class Maze {
 		
 		Maze myMaze = new Maze(f);
 
-		myMaze.printDirectionsFromF();
-		myMaze.printStep();
+		JFrame frame = new JFrame("myJFrame");
+		frame.add(myMaze);
+		frame.setSize(200, 200);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//		myMaze.printDirectionsFromF();
+//		myMaze.printStep();
 		myMaze.printMaze();
-		myMaze.printSolution();
+//		myMaze.printSolution();
+
+		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
+		myMaze.addRobot(myRobot);
+		myMaze.printMaze();
 	}
 
 	
