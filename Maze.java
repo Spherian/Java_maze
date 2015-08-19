@@ -1,18 +1,15 @@
-import java.io.*;
 import Point2d.*;
 import Grid.*;
 import Robot.*;
 
+import java.io.*;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.Scanner;
 
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-
-public class Maze extends JPanel {
+public class Maze {
 
 	int row, col, stepsToSolve;	
 	Point2d S, F;
@@ -22,10 +19,6 @@ public class Maze extends JPanel {
 
 	//Constructor
 	public Maze(File file) {
-
-		KeyListener listener = new MyKeyListener();
-		addKeyListener(listener);
-		setFocusable(true);
 
 		setMazeFromFile(file);
 		this.S = findChar('S');
@@ -414,30 +407,9 @@ public class Maze extends JPanel {
 		mazeGrid.setGridElement(S, r.getSymbol());
 	}
 
-	public class MyKeyListener implements KeyListener {
-
-		public void keyPressed(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				System.out.println("RIGHT");
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				System.out.println("LEFT");
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_UP) {
-				System.out.println("UP");
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				System.out.println("DOWN");
-			}
-		}
-
-		public void keyReleased(KeyEvent e) {
-
-		}
-
-		public void keyTyped(KeyEvent e) {
-
-		}
+	public void moveRobot(Robot r, Point2d pos) {
+		mazeGrid.setGridElement(r.getCurrentPos(), ' ');
+		mazeGrid.setGridElement(pos, r.getSymbol());
 	}
 
 	public static void main(String[] args) {
@@ -446,21 +418,46 @@ public class Maze extends JPanel {
 		File f = new File(maze1FileName);
 		
 		Maze myMaze = new Maze(f);
+		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
+		myMaze.addRobot(myRobot);		
+		Point2d newRobotPos = myRobot.getCurrentPos();
 
-		JFrame frame = new JFrame("myJFrame");
-		frame.add(myMaze);
-		frame.setSize(200, 200);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Scanner sc = new Scanner(System.in);
+		String tmpStr = sc.next();
+
+		while(!tmpStr.equals("p")) {
+			tmpStr = sc.next();
+			if(tmpStr.equals("w")){
+				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()-1, myRobot.getCurrentPos().getY());
+			}
+			if(tmpStr.equals("s")) {
+				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()+1, myRobot.getCurrentPos().getY());
+			}
+			if(tmpStr.equals("a")) {
+				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()-1);
+			}
+			if(tmpStr.equals("d")) {
+				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()+1);
+			}
+			System.out.println(newRobotPos.toString());
+			if(myMaze.isOpen(newRobotPos)) {
+				myMaze.moveRobot(myRobot, newRobotPos);
+				myRobot.setCurrentPos(newRobotPos);
+			}
+			else {
+				System.out.println("You cannot go here");
+				newRobotPos = myRobot.getCurrentPos();
+			}
+			myMaze.printMaze();
+			System.out.println("Enter command:");
+		}
+
+		sc.close();
 
 //		myMaze.printDirectionsFromF();
 //		myMaze.printStep();
 		myMaze.printMaze();
 //		myMaze.printSolution();
-
-		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
-		myMaze.addRobot(myRobot);
-		myMaze.printMaze();
 	}
 
 	
