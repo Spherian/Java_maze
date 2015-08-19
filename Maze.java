@@ -86,7 +86,8 @@ public class Maze {
 
 	//Check if there's only one S and one F and if the maze is solveable
 	public boolean isMazeValid() {
-		Grid<Character> historyGrid = this.mazeGrid;
+		Grid<Character> historyGrid = new Grid<Character>(this.row, this.col, null);
+		this.mazeGrid.copy(historyGrid);
 		boolean decision;
 
 		if(onlyOneChar('S') && onlyOneChar('F')) {
@@ -158,8 +159,6 @@ public class Maze {
 			historyGrid.copy(oldGridMaze);
 		}
 		this.stepsToSolve = step.getGridElement(F);
-
-		this.step.printGrid();
 
 		return decision;
 	} 
@@ -342,7 +341,6 @@ public class Maze {
 		this.solution = new Grid<Integer>(this.row, this.col, null);
 		this.directionsFromF = new ArrayList<String>();
 		Point2d tmpPos = new Point2d(F.getX(), F.getY());
-
 		Point2d.Adjacent adj = tmpPos.new Adjacent();
 		Point2d[] adjTmpPos = adj.getAdjacent();
 
@@ -407,6 +405,8 @@ public class Maze {
 		Maze myMaze = new Maze(f);
 
 		myMaze.printDirectionsFromF();
+		myMaze.printStep();
+		myMaze.printMaze();
 		myMaze.printSolution();
 	}
 
