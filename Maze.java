@@ -92,7 +92,7 @@ public class Maze {
 	//Check if there's only one S and one F and if the maze is solveable
 	public boolean isMazeValid() {
 		Grid<Character> historyGrid = new Grid<Character>(this.row, this.col, null);
-		this.mazeGrid.copy(historyGrid);
+		this.mazeGrid.copyTo(historyGrid);
 		boolean decision;
 
 		if(onlyOneChar('S') && onlyOneChar('F')) {
@@ -111,7 +111,7 @@ public class Maze {
 		int stepper = 0;
 		this.step.setGridElement(S, 0);		
 
-		historyGrid.copy(oldGridMaze);
+		historyGrid.copyTo(oldGridMaze);
 		while(historyGrid.getGridElement(F) != '*') {
 			for(int i=0; i<this.row; i++) {
 				for(int j=0; j<this.col; j++) {
@@ -161,7 +161,7 @@ public class Maze {
 				decision = false;
 				break;
 			}
-			historyGrid.copy(oldGridMaze);
+			historyGrid.copyTo(oldGridMaze);
 		}
 		this.stepsToSolve = step.getGridElement(F);
 
@@ -412,10 +412,23 @@ public class Maze {
 		mazeGrid.setGridElement(pos, r.getSymbol());
 		if(!pos.compare(this.S)) {
 			mazeGrid.setGridElement(this.S, 'S');
+		//	r.updateMap(this.S, 'S');
 		}
 		if(!pos.compare(this.F)) {
 			mazeGrid.setGridElement(this.F, 'F');
+		//	r.updateMap(this.F, 'F');
 		}
+
+		r.updateMap(r.getCurrentPos(), ' ');
+		r.updateMap(pos, r.getSymbol());
+
+		Point2d[] adjPos = pos.new Adjacent().getAdjacent();
+		for(int i=0; i<adjPos.length; i++) {
+				if(adjPos[i].getX() >= 0 && adjPos[i].getY() >= 0) {
+					r.updateMap(adjPos[i], mazeGrid.getGridElement(adjPos[i]));
+				}
+		}
+
 	}
 
 	public static void main(String[] args) {
@@ -424,11 +437,12 @@ public class Maze {
 		File f = new File(maze1FileName);
 		
 		Maze myMaze = new Maze(f);
-		myMaze.printMaze();
+	//	myMaze.printMaze();
 
 		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
 		myMaze.addRobot(myRobot);		
 		Point2d newRobotPos = myRobot.getCurrentPos();
+		myRobot.getMap().printGrid();
 
 		Scanner sc = new Scanner(System.in);
 		String tmpStr = " ";
@@ -436,6 +450,7 @@ public class Maze {
 		while(!tmpStr.equals("quit")) {
 			System.out.print("Enter command: ");
 			tmpStr = sc.next();
+
 			if(tmpStr.equals("w")){
 				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()-1, myRobot.getCurrentPos().getY());
 			}
@@ -448,6 +463,7 @@ public class Maze {
 			if(tmpStr.equals("d")) {
 				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()+1);
 			}
+
 			if(myMaze.isOpen(newRobotPos)) {
 				myMaze.moveRobot(myRobot, newRobotPos);
 				myRobot.setCurrentPos(newRobotPos);
@@ -457,7 +473,8 @@ public class Maze {
 				newRobotPos = myRobot.getCurrentPos();
 			}
 
-			myMaze.printMaze();
+		//	myMaze.printMaze();
+			myRobot.getMap().printGrid();
 		}
 
 		sc.close();
