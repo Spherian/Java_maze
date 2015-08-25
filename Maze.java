@@ -424,7 +424,7 @@ public class Maze {
 
 		Point2d[] adjPos = pos.new Adjacent().getAdjacent();
 		for(int i=0; i<adjPos.length; i++) {
-				if(adjPos[i].getX() >= 0 && adjPos[i].getY() >= 0) {
+				if(adjPos[i].getX() >= 0 && adjPos[i].getY() >= 0 && adjPos[i].getX() < this.row && adjPos[i].getY() < this.col) {
 					r.updateMap(adjPos[i], mazeGrid.getGridElement(adjPos[i]));
 				}
 		}
