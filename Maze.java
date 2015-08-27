@@ -431,49 +431,58 @@ public class Maze {
 
 	}
 
+	public boolean commandRobot(Robot robot, String move) {	
+
+			Point2d newRobotPos = robot.getCurrentPos();
+
+			if(move.equals("w")){
+				newRobotPos = new Point2d(robot.getCurrentPos().getX()-1, robot.getCurrentPos().getY());
+			}
+			if(move.equals("s")) {
+				newRobotPos = new Point2d(robot.getCurrentPos().getX()+1, robot.getCurrentPos().getY());
+			}
+			if(move.equals("a")) {
+				newRobotPos = new Point2d(robot.getCurrentPos().getX(), robot.getCurrentPos().getY()-1);
+			}
+			if(move.equals("d")) {
+				newRobotPos = new Point2d(robot.getCurrentPos().getX(), robot.getCurrentPos().getY()+1);
+			}
+
+			if(isOpen(newRobotPos)) {
+				moveRobot(robot, newRobotPos);
+				robot.setCurrentPos(newRobotPos);
+				return true;
+			}
+			else {
+				newRobotPos = robot.getCurrentPos();
+				return false;
+			}
+	} 
+
 	public static void main(String[] args) {
 
 		String maze1FileName = args[0];
 		File f = new File(maze1FileName);
 		
 		Maze myMaze = new Maze(f);
-	//	myMaze.printMaze();
 
 		Robot myRobot = new Robot("Spy Hunter", myMaze.S, 'R');
 		myMaze.addRobot(myRobot);		
-		Point2d newRobotPos = myRobot.getCurrentPos();
-		myRobot.getMap().printGrid();
 
 		Scanner sc = new Scanner(System.in);
 		String tmpStr = " ";
 
 		while(!tmpStr.equals("quit")) {
-			System.out.print("Enter command: ");
+			System.out.print("Enter a command [w,a,s, or d]: ");
 			tmpStr = sc.next();
 
-			if(tmpStr.equals("w")){
-				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()-1, myRobot.getCurrentPos().getY());
-			}
-			if(tmpStr.equals("s")) {
-				newRobotPos = new Point2d(myRobot.getCurrentPos().getX()+1, myRobot.getCurrentPos().getY());
-			}
-			if(tmpStr.equals("a")) {
-				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()-1);
-			}
-			if(tmpStr.equals("d")) {
-				newRobotPos = new Point2d(myRobot.getCurrentPos().getX(), myRobot.getCurrentPos().getY()+1);
-			}
+			if(myMaze.commandRobot(myRobot, tmpStr)) {
 
-			if(myMaze.isOpen(newRobotPos)) {
-				myMaze.moveRobot(myRobot, newRobotPos);
-				myRobot.setCurrentPos(newRobotPos);
 			}
 			else {
-				System.out.println("You cannot go here");
-				newRobotPos = myRobot.getCurrentPos();
+				System.out.println("You cannot go here or invalid command");
 			}
 
-		//	myMaze.printMaze();
 			myRobot.getMap().printGrid();
 		}
 
